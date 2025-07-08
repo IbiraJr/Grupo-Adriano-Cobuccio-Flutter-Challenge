@@ -38,6 +38,7 @@ class CryptoDetailViewModel extends StateNotifier<CryptoDetailState> {
           loaded: (loadedCrypto) => CryptoDetailState.loaded(loadedCrypto),
           orElse: () => state,
         );
+        
       },
     );
   }

@@ -1,4 +1,5 @@
 import 'package:brasil_card/core/services/hive_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -24,6 +25,7 @@ class AppConfig {
   static const int itemsPerPage = 20;
 
   static Future<void> init() async {
+    await dotenv.load(fileName: ".env");
     final appDocumentDir = await getApplicationDocumentsDirectory();
     final path = appDocumentDir.path;
     cacheDir = path;

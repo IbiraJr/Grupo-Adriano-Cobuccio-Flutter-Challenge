@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http_cache_hive_store/http_cache_hive_store.dart';
 import '../config/app_config.dart';
 import 'dart:developer' as dev;
@@ -23,7 +24,7 @@ class DioClient {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'x-cg-demo-api-key': 'CG-gyEMqDGRSVXu3fdg955DbqQ2',
+        'x-cg-demo-api-key': dotenv.env['API_KEY']!,
       },
     );
 
