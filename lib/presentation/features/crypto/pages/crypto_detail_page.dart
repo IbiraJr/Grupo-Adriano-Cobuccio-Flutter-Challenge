@@ -1,5 +1,6 @@
 import 'package:brasil_card/core/router/app_router.dart';
 import 'package:brasil_card/domain/entities/crypto.dart';
+import 'package:brasil_card/presentation/app/theme.dart';
 import 'package:brasil_card/presentation/features/crypto/viewmodels/crypto_detail_state.dart';
 import 'package:brasil_card/presentation/features/crypto/viewmodels/crypto_detail_view_model.dart';
 import 'package:brasil_card/presentation/shared/widgets/error_widget.dart';
@@ -86,10 +87,7 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
   }
 
   Widget _buildCryptoDetails(Crypto crypto) {
-    final currencyFormat = NumberFormat.currency(
-      locale: 'pt_BR',
-      symbol: 'R\$',
-    );
+    final currencyFormat = NumberFormat.currency(locale: 'pt_BR');
     final percentFormat = NumberFormat.percentPattern('pt_BR');
     final numberFormat = NumberFormat.decimalPattern('pt_BR');
     final dateFormat = DateFormat('dd/mm/yyyy HH:mm');
@@ -98,8 +96,28 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
         crypto.priceChangePercentage24h != null &&
         crypto.priceChangePercentage24h! >= 0;
 
+    // Obter dimensões responsivas
+    final padding = AppTheme.getResponsivePadding(context);
+    final imageSize = AppTheme.getResponsiveImageSize(context, baseSize: 80);
+    final titleFontSize = AppTheme.getResponsiveFontSize(
+      context,
+      baseFontSize: 24,
+    );
+    final subtitleFontSize = AppTheme.getResponsiveFontSize(
+      context,
+      baseFontSize: 16,
+    );
+    final priceFontSize = AppTheme.getResponsiveFontSize(
+      context,
+      baseFontSize: 28,
+    );
+    final sectionTitleFontSize = AppTheme.getResponsiveFontSize(
+      context,
+      baseFontSize: 18,
+    );
+
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(padding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -109,9 +127,9 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
               // Imagem da criptomoeda
               if (crypto.image != null)
                 Container(
-                  width: 80,
-                  height: 80,
-                  margin: const EdgeInsets.only(right: 16),
+                  width: imageSize,
+                  height: imageSize,
+                  margin: EdgeInsets.only(right: padding),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
@@ -122,17 +140,17 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
                 )
               else
                 Container(
-                  width: 80,
-                  height: 80,
-                  margin: const EdgeInsets.only(right: 16),
+                  width: imageSize,
+                  height: imageSize,
+                  margin: EdgeInsets.only(right: padding),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.currency_bitcoin,
                     color: Colors.white,
-                    size: 40,
+                    size: imageSize * 0.5,
                   ),
                 ),
 
@@ -143,21 +161,25 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
                   children: [
                     Text(
                       crypto.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 24,
+                        fontSize: titleFontSize,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       crypto.symbol.toUpperCase(),
-                      style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: subtitleFontSize,
+                      ),
                     ),
                     if (crypto.marketCapRank != null)
                       Container(
-                        margin: const EdgeInsets.only(top: 4),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
+                        margin: EdgeInsets.only(top: padding / 4),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: padding / 2,
+                          vertical: padding / 8,
                         ),
                         decoration: BoxDecoration(
                           color: Colors.grey[200],
@@ -168,7 +190,7 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
                           style: TextStyle(
                             color: Colors.grey[800],
                             fontWeight: FontWeight.bold,
-                            fontSize: 12,
+                            fontSize: subtitleFontSize * 0.75,
                           ),
                         ),
                       ),
@@ -178,24 +200,27 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
             ],
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: padding * 1.5),
 
           // Preço atual
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(padding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Preço Atual',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: sectionTitleFontSize,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: padding / 2),
                   Text(
                     currencyFormat.format(crypto.currentPrice),
-                    style: const TextStyle(
-                      fontSize: 28,
+                    style: TextStyle(
+                      fontSize: priceFontSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -385,8 +410,20 @@ class _CryptoDetailPageState extends ConsumerState<CryptoDetailPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: Colors.grey[600])),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Flexible(
+            child: Text(
+              label,
+              style: TextStyle(color: Colors.grey[600]),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

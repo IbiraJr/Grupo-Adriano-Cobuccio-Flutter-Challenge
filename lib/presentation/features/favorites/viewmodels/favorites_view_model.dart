@@ -59,7 +59,7 @@ class FavoritesViewModel extends StateNotifier<FavoritesState> {
   }
 }
 
-// Provider for FavoritesViewModel
+// Provider para FavoritesViewModel
 final favoritesViewModelProvider =
     StateNotifierProvider<FavoritesViewModel, FavoritesState>((ref) {
       final repository = ref.watch(cryptoRepositoryProvider);

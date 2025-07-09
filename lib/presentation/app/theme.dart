@@ -106,4 +106,33 @@ class AppTheme {
       ),
     );
   }
+  
+  // Adicionar constantes para espaçamento responsivo
+  static double getResponsivePadding(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 360) return 8.0;
+    if (width < 600) return 16.0;
+    return 24.0;
+  }
+  
+  static double getResponsiveFontSize(BuildContext context, {double baseFontSize = 16}) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 360) return baseFontSize * 0.8;
+    if (width < 600) return baseFontSize;
+    return baseFontSize * 1.2;
+  }
+  
+  static double getResponsiveIconSize(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 360) return 18.0;
+    if (width < 600) return 24.0;
+    return 30.0;
+  }
+  
+  static double getResponsiveImageSize(BuildContext context, {double baseSize = 50}) {
+    final width = MediaQuery.of(context).size.width;
+    if (width < 360) return baseSize * 0.8;
+    if (width < 600) return baseSize;
+    return baseSize * 1.2;
+  }
 }

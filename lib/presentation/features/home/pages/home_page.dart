@@ -1,3 +1,4 @@
+import 'package:brasil_card/presentation/app/theme.dart';
 import 'package:brasil_card/presentation/features/home/viewmodels/crypto_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,6 +64,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(cryptoViewModelProvider);
+    final padding = AppTheme.getResponsivePadding(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -76,7 +78,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         loading: () => const LoadingWidget(),
         loaded:
             (cryptos, isLoadingMore) =>
-                _buildCryptoList(cryptos, isLoadingMore),
+                _buildCryptoList(cryptos, isLoadingMore, padding),
         error:
             (message) => CustomErrorWidget(
               message: message,
@@ -87,18 +89,18 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildCryptoList(List<dynamic> cryptos, bool isLoadingMore) {
+  Widget _buildCryptoList(List<dynamic> cryptos, bool isLoadingMore, double padding) {
     return RefreshIndicator(
       onRefresh: _onRefresh,
       child: ListView.builder(
         controller: _scrollController,
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(padding),
         itemCount: cryptos.length + (isLoadingMore ? 1 : 0),
         itemBuilder: (context, index) {
           if (index == cryptos.length) {
-            return const Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(child: CircularProgressIndicator()),
+            return Padding(
+              padding: EdgeInsets.all(padding),
+              child: const Center(child: CircularProgressIndicator()),
             );
           }
 

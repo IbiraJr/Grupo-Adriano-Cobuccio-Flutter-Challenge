@@ -29,7 +29,7 @@ class CryptoRemoteDataSourceImpl implements CryptoRemoteDataSource {
       final response = await _dio.get(
         AppConfig.coinsEndpoint,
         queryParameters: {
-          'vs_currency': 'usd',
+          'vs_currency': 'brl',
           'order': 'market_cap_desc',
           'per_page': perPage,
           'page': page,
@@ -77,13 +77,13 @@ class CryptoRemoteDataSourceImpl implements CryptoRemoteDataSource {
           'name': data['name'],
           'image': data['image']?['large'],
           'current_price':
-              data['market_data']?['current_price']?['usd']?.toDouble() ?? 0.0,
-          'market_cap': data['market_data']?['market_cap']?['usd']?.toDouble(),
+              data['market_data']?['current_price']?['brl']?.toDouble() ?? 0.0,
+          'market_cap': data['market_data']?['market_cap']?['brl']?.toDouble(),
           'market_cap_rank': data['market_data']?['market_cap_rank'],
           'total_volume':
-              data['market_data']?['total_volume']?['usd']?.toDouble(),
-          'high_24h': data['market_data']?['high_24h']?['usd']?.toDouble(),
-          'low_24h': data['market_data']?['low_24h']?['usd']?.toDouble(),
+              data['market_data']?['total_volume']?['brl']?.toDouble(),
+          'high_24h': data['market_data']?['high_24h']?['brl']?.toDouble(),
+          'low_24h': data['market_data']?['low_24h']?['brl']?.toDouble(),
           'price_change_24h':
               data['market_data']?['price_change_24h']?.toDouble(),
           'price_change_percentage_24h':

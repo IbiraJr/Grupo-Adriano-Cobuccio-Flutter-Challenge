@@ -18,6 +18,8 @@ class MainNavigation extends StatelessWidget {
   Widget _buildBottomNavigationBar(BuildContext context) {
     final String location = GoRouterState.of(context).matchedLocation;
     int currentIndex = 0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth < 360;
 
     if (location == AppRouter.home) {
       currentIndex = 0;
@@ -30,6 +32,9 @@ class MainNavigation extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => _onItemTapped(context, index),
+      selectedFontSize: isSmallScreen ? 12 : 14,
+      unselectedFontSize: isSmallScreen ? 10 : 12,
+      iconSize: isSmallScreen ? 20 : 24,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),

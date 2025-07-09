@@ -1,4 +1,5 @@
 import 'package:brasil_card/core/router/app_router.dart';
+import 'package:brasil_card/presentation/app/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -15,15 +16,22 @@ class CryptoListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final currencyFormat = NumberFormat.currency(
       locale: 'pt_BR',
-      symbol: 'R\$',
     );
     final percentFormat = NumberFormat.percentPattern('pt_BR');
     final isPositive =
         crypto.priceChangePercentage24h != null &&
         crypto.priceChangePercentage24h! >= 0;
+        
+    // Obter dimensões responsivas
+    final padding = AppTheme.getResponsivePadding(context);
+    final imageSize = AppTheme.getResponsiveImageSize(context);
+    final titleFontSize = AppTheme.getResponsiveFontSize(context, baseFontSize: 16);
+    final subtitleFontSize = AppTheme.getResponsiveFontSize(context, baseFontSize: 14);
+    final priceFontSize = AppTheme.getResponsiveFontSize(context, baseFontSize: 16);
+    final percentFontSize = AppTheme.getResponsiveFontSize(context, baseFontSize: 12);
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.only(bottom: padding),
       elevation: 2,
       child: InkWell(
         onTap:
@@ -34,15 +42,15 @@ class CryptoListItem extends StatelessWidget {
               ),
             },
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(padding),
           child: Row(
             children: [
               // Imagem da criptomoeda
               if (crypto.image != null)
                 Container(
-                  width: 50,
-                  height: 50,
-                  margin: const EdgeInsets.only(right: 16),
+                  width: imageSize,
+                  height: imageSize,
+                  margin: EdgeInsets.only(right: padding),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
@@ -53,16 +61,17 @@ class CryptoListItem extends StatelessWidget {
                 )
               else
                 Container(
-                  width: 50,
-                  height: 50,
-                  margin: const EdgeInsets.only(right: 16),
+                  width: imageSize,
+                  height: imageSize,
+                  margin: EdgeInsets.only(right: padding),
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.currency_bitcoin,
                     color: Colors.white,
+                    size: imageSize * 0.6,
                   ),
                 ),
 
@@ -73,15 +82,16 @@ class CryptoListItem extends StatelessWidget {
                   children: [
                     Text(
                       crypto.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
+                        fontSize: titleFontSize,
                       ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: padding / 4),
                     Text(
                       crypto.symbol.toUpperCase(),
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      style: TextStyle(color: Colors.grey[600], fontSize: subtitleFontSize),
                     ),
                   ],
                 ),
@@ -93,17 +103,17 @@ class CryptoListItem extends StatelessWidget {
                 children: [
                   Text(
                     currencyFormat.format(crypto.currentPrice),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: priceFontSize,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: padding / 4),
                   if (crypto.priceChangePercentage24h != null)
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: padding / 2,
+                        vertical: padding / 4,
                       ),
                       decoration: BoxDecoration(
                         color: isPositive ? Colors.green[100] : Colors.red[100],
@@ -118,7 +128,7 @@ class CryptoListItem extends StatelessWidget {
                           color:
                               isPositive ? Colors.green[800] : Colors.red[800],
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: percentFontSize,
                         ),
                       ),
                     ),

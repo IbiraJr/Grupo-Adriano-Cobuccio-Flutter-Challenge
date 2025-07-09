@@ -7,8 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CryptoDetailViewModel extends StateNotifier<CryptoDetailState> {
   final CryptoRepository _repository;
+  final Ref _ref;
 
-  CryptoDetailViewModel(this._repository) : super(const CryptoDetailState.initial());
+  CryptoDetailViewModel(this._repository, this._ref) : super(const CryptoDetailState.initial());
 
   Future<void> getCryptoDetail(String cryptoId) async {
     state = const CryptoDetailState.loading();
@@ -39,23 +40,22 @@ class CryptoDetailViewModel extends StateNotifier<CryptoDetailState> {
           orElse: () => state,
         );
         
+        // Invalidate the isFavoriteProvider
+        _ref.invalidate(isFavoriteProvider(crypto.id));
       },
     );
   }
 
   Future<bool> isFavorite(String cryptoId) async {
     final result = await _repository.isFavorite(cryptoId);
-    return result.fold(
-      (failure) => false,
-      (isFavorite) => isFavorite,
-    );
+    return result.fold((failure) => false, (isFavorite) => isFavorite);
   }
 }
 
 // Provider for CryptoDetailViewModel
 final cryptoDetailViewModelProvider = StateNotifierProvider<CryptoDetailViewModel, CryptoDetailState>((ref) {
   final repository = ref.watch(cryptoRepositoryProvider);
-  return CryptoDetailViewModel(repository);
+  return CryptoDetailViewModel(repository, ref);
 });
 
 // Provider for checking if a crypto is favorite

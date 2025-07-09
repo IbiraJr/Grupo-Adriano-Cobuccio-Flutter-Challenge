@@ -1,3 +1,4 @@
+import 'package:brasil_card/presentation/app/theme.dart';
 import 'package:brasil_card/presentation/features/home/viewmodels/crypto_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,6 +66,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(cryptoViewModelProvider);
+    final padding = AppTheme.getResponsivePadding(context);
+    final iconSize = AppTheme.getResponsiveIconSize(context);
+    final fontSize = AppTheme.getResponsiveFontSize(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +82,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             suffixIcon:
                 _isSearching
                     ? IconButton(
-                      icon: const Icon(Icons.clear, color: Colors.white),
+                      icon: Icon(Icons.clear, color: Colors.white, size: iconSize),
                       onPressed: _clearSearch,
                     )
                     : null,
@@ -91,25 +95,26 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           _isSearching
               ? state.when(
                 initial:
-                    () => const Center(child: Text('Digite para buscar...')),
+                    () => Center(child: Text('Digite para buscar...', style: TextStyle(fontSize: fontSize))),
                 loading: () => const LoadingWidget(),
                 loaded:
-                    (cryptos, isLoadingMore) => _buildSearchResults(cryptos),
+                    (cryptos, isLoadingMore) => _buildSearchResults(cryptos, padding, fontSize, iconSize),
                 error:
                     (message) => CustomErrorWidget(
                       message: message,
                       onRetry: () => _onSearch(_searchController.text),
                     ),
               )
-              : const Center(
+              : Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.search, size: 80, color: Colors.grey),
-                    SizedBox(height: 16),
+                    Icon(Icons.search, size: iconSize * 2, color: Colors.grey),
+                    SizedBox(height: padding),
                     Text(
                       'Digite o nome ou símbolo da criptomoeda',
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                      style: TextStyle(fontSize: fontSize, color: Colors.grey),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
@@ -117,26 +122,28 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     );
   }
 
-  Widget _buildSearchResults(List<dynamic> cryptos) {
+  Widget _buildSearchResults(List<dynamic> cryptos, double padding, double fontSize, double iconSize) {
     if (cryptos.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
+            Icon(Icons.search_off, size: iconSize * 2, color: Colors.grey[400]),
+            SizedBox(height: padding),
             Text(
               'Nenhum resultado encontrado',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: fontSize * 1.1,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[600],
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: padding / 2),
             Text(
               'Tente buscar por outro termo',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              style: TextStyle(fontSize: fontSize * 0.9, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
@@ -144,7 +151,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     }
 
     return ListView.builder(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(padding),
       itemCount: cryptos.length,
       itemBuilder: (context, index) {
         return CryptoListItem(crypto: cryptos[index]);
